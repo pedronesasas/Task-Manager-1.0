@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <!-- Quick Add -->
+    <!-- Input -->
     <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
         <textarea
             id="new-task-input"
@@ -108,17 +108,15 @@
         ></textarea>
 
         <p class="text-[10px] text-gray-400 mt-2 pl-1">
-            Exemplo:
-            <br>
-            142,Voxuy,14h dia 13,alta,fazer junto do joão<br>
+            Exemplo:<br>
+            142,Voxuy,14h dia 13,alta,fazer junto do João<br>
             -Conferir automação<br>
             -Testar checkout<br>
-            -Recuperação por tags
         </p>
     </div>
 
     <!-- Task List -->
-    <div id="task-list" class="divide-y divide-gray-50 overflow-y-auto custom-scrollbar flex-grow bg-white"></div>
+    <div id="task-list" class="divide-y divide-gray-50 overflow-y-auto flex-grow bg-white"></div>
 
     <div class="bg-gray-50 px-6 py-4 text-center text-xs text-gray-400 border-t border-gray-100">
         Clique para concluir • Seta para expandir • "x" remove tudo
@@ -126,19 +124,18 @@
 </div>
 
 <script>
-/* ---------------- DATA STRUCTURE ---------------- */
-
+/* DATA */
 let tasks = [];
 let lastAddedId = null;
+let isToggling = false;
 
 const taskList = document.getElementById("task-list");
 const taskCount = document.getElementById("task-count");
 
-/* ---------------- ICONS ---------------- */
-
+/* ICONS */
 const icons = {
-    clock: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
-    trash: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6l1-2h4l1 2"/></svg>`,
+    clock: `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    trash: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6l1-2h4l1 2"/></svg>`,
     arrowRight: `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 3 12 7 5 11"/></svg>`,
     arrowDown: `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 5 7 12 11 5"/></svg>`
 };
@@ -150,8 +147,7 @@ const priorityStyles = {
     baixa: "bg-gray-50 text-gray-600 border-gray-200"
 };
 
-/* ---------------- INPUT EVENT ---------------- */
-
+/* INPUT HANDLER */
 document.getElementById("new-task-input").addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -160,18 +156,15 @@ document.getElementById("new-task-input").addEventListener("keydown", function (
     }
 });
 
-/* ---------------- PROCESSING MULTILINE INPUT ---------------- */
-
+/* PROCESS MULTILINE */
 function processInput(text) {
-    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l);
 
     let currentTask = null;
 
     lines.forEach(line => {
         if (!line.startsWith("-")) {
-            // É uma tarefa principal
             const parts = line.split(",").map(p => p.trim());
-
             const [id, title, deadline, priority, detail] = parts;
 
             currentTask = {
@@ -187,8 +180,7 @@ function processInput(text) {
 
             tasks.push(currentTask);
             lastAddedId = currentTask.id;
-
-        } else if (currentTask) {
+        } else {
             currentTask.subtasks.push({
                 title: line.replace(/^-/, "").trim(),
                 completed: false
@@ -199,8 +191,7 @@ function processInput(text) {
     renderTasks();
 }
 
-/* ---------------- RENDER ---------------- */
-
+/* RENDER */
 function renderTasks() {
     taskList.innerHTML = "";
     let pending = 0;
@@ -212,23 +203,23 @@ function renderTasks() {
         if (!task.completed) pending++;
 
         const taskRow = document.createElement("div");
-        taskRow.className = "p-5 animate-fade-in transition border-l-4 " +
-            (task.completed ? "opacity-50 grayscale bg-gray-50 scale-[0.98]" : "bg-white hover:shadow-sm hover:border-blue-500");
+
+        taskRow.className =
+            "p-5 transition border-l-4 " +
+            (task.completed ? "opacity-50 grayscale bg-gray-50 scale-[0.98]" :
+                              "bg-white hover:shadow-sm hover:border-blue-500") +
+            (!isToggling ? " animate-fade-in" : "");
 
         taskRow.style.animationDelay = `${index * 40}ms`;
 
         taskRow.innerHTML = `
             <div class="flex items-start justify-between w-full">
-
-                <!-- Left -->
                 <div class="flex gap-4 flex-1 items-start">
 
-                    <!-- Checkbox -->
                     <input type="checkbox" class="custom-checkbox mt-1"
                         ${task.completed ? "checked" : ""}
                         onclick="toggleTask(${task.id}); event.stopPropagation();">
 
-                    <!-- Expand/Collapse -->
                     <button onclick="toggleExpand(${task.id}); event.stopPropagation();" 
                         class="mt-1 text-gray-400 hover:text-gray-600">
                         ${task.expanded ? icons.arrowDown : icons.arrowRight}
@@ -242,15 +233,12 @@ function renderTasks() {
                             ${task.detail}
                         </span>
                     </div>
-
                 </div>
 
-                <!-- Right -->
                 <div class="flex gap-3 items-center">
 
                     <div class="flex items-center text-xs text-gray-500">
-                        ${icons.clock} 
-                        ${task.deadline}
+                        ${icons.clock} ${task.deadline}
                     </div>
 
                     <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold border 
@@ -263,10 +251,8 @@ function renderTasks() {
                         ${icons.trash}
                     </button>
                 </div>
-
             </div>
 
-            <!-- Subtasks -->
             <div id="sub-${task.id}" class="${task.expanded ? '' : 'hidden'} mt-3 pl-10 flex flex-col gap-2">
                 ${task.subtasks
                     .map((st, i) => `
@@ -292,8 +278,7 @@ function renderTasks() {
     taskCount.textContent = pending;
 }
 
-/* ---------------- INTERACTIONS ---------------- */
-
+/* INTERACTIONS */
 function toggleExpand(id) {
     const task = tasks.find(t => t.id === id);
     task.expanded = !task.expanded;
@@ -301,15 +286,19 @@ function toggleExpand(id) {
 }
 
 function toggleTask(id) {
+    isToggling = true;
     const task = tasks.find(t => t.id === id);
     task.completed = !task.completed;
     renderTasks();
+    isToggling = false;
 }
 
 function toggleSubtask(id, index) {
+    isToggling = true;
     const task = tasks.find(t => t.id === id);
     task.subtasks[index].completed = !task.subtasks[index].completed;
     renderTasks();
+    isToggling = false;
 }
 
 function deleteTask(id) {
@@ -317,7 +306,7 @@ function deleteTask(id) {
     renderTasks();
 }
 
-/* ---------------- INIT ---------------- */
+/* INIT */
 renderTasks();
 </script>
 
