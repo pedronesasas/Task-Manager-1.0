@@ -1,160 +1,65 @@
-# 📋 Interactive Task List – Clean UI/UX
+# 📝 Lista de Tarefas com Subtarefas (SPA)
 
-A minimalist Single Page Application (SPA) focused on fast, distraction-free daily task management.
-Built with **HTML + Tailwind CSS (CDN) + Vanilla JavaScript**, with no frameworks.
+Uma aplicação simples e minimalista para gerenciamento de tarefas, permitindo adicionar **tarefas principais** e **subtarefas** usando um formato estruturado em múltiplas linhas.
 
----
-
-## 🚀 Overview
-
-This project provides a clean and fast workflow for managing tasks with:
-
-* Instant interaction
-* A text-based quick-add system
-* Smooth micro-animations
-* Minimalist and modern UI
-* Responsive layout
-* Zero dependencies besides Tailwind CDN
-
-Perfect for learning front-end, showcasing UI/UX, and building lightweight productivity tools.
+Desenvolvido com **HTML + TailwindCSS + JavaScript puro**.
 
 ---
 
-## ✨ Features
+## 🚀 Funcionalidades
 
-### ✔ Task Management
-
-* Single-column task board
-* Each task card includes:
-
-  * Custom checkbox
-  * Short ID (e.g., #145)
-  * Title + details
-  * Deadline with clock icon
-  * Priority badge (Urgent, High, Normal, Low)
-* Automatic count of pending tasks
-
-### ✔ Quick Add Input (Smart Parsing)
-
-Add tasks using a simple semicolon-separated format:
-
-```
-Title ; Deadline ; Priority ; Details
-```
-
-Example:
-
-```
-Meeting ; 2 PM ; High ; Room 2
-```
-
-Default behavior if fields are omitted:
-
-* **Deadline:** “Today”
-* **Priority:** “Normal”
-* **Details:** empty
-
-### ✔ Interactive States
-
-* Click the entire card or checkbox to complete the task
-* Completed state includes:
-
-  * Lower opacity
-  * Light grayscale
-  * Slight scale-down
-  * Line-through text
-
-### ✔ Delete Task
-
-* Delete button appears on hover
-* Smooth removal with full re-render
-
-### ✔ Smooth UI/UX
-
-* Fade-in animation for list items
-* Highlight animation when a task is added
-* Hover shadows and soft transitions (300ms)
-* Fully responsive (mobile & desktop)
+* Adição de várias tarefas de uma vez
+* Subtarefas associadas a cada tarefa
+* IDs definidos pelo próprio usuário
+* Checkbox para tarefas e subtarefas
+* Expandir/Recolher subtarefas
+* Exclusão em cascata
+* Ordenação automática por ID
+* Interface minimalista e responsiva
 
 ---
 
-## 🛠 Tech Stack
+## ✍️ Formato de entrada
 
-* **HTML5**
-* **Tailwind CSS via CDN**
-* **Vanilla JavaScript (ES6+)**
-* **Google Fonts – Inter**
-* **No frameworks, no build tools, no dependencies**
+Você pode colar várias tarefas de uma vez seguindo o padrão:
 
----
+```
+[ID],[Título],[Prazo],[Prioridade],[Detalhes]
+-Subtarefa 1
+-Subtarefa 2
+-Subtarefa 3
 
-## 📦 Running the Project
-
-### 🔹 Option 1 — Open Directly (simplest)
-
-Just click the `index.html` file.
-No installation required.
-
-### 🔹 Option 2 — VS Code + Live Server (recommended)
-
-1. Open the folder in VS Code
-2. Install "Live Server" extension
-3. Right-click **index.html** → *Open with Live Server*
-4. App runs at `http://127.0.0.1:5500`
-
-### 🔹 Option 3 — Local Static Server
-
-If you have Node.js:
-
-```bash
-npx serve
+[ID],[Título],[Prazo],[Prioridade],[Detalhes]
+-Subtarefa 1
+-Subtarefa 2
 ```
 
-or
+### Exemplo:
 
-```bash
-npx http-server
+```
+142,Voxuy,14h dia 13,alta,fazer junto do joão
+-Conferir automação
+-Testar link de checkout personalizado
+
+143,TAP,hoje,alta,call de alinhamento com o lucas
+-Buscar doc modelo no drive 
+-Call com o lucão
 ```
 
 ---
 
-## 🗂 Project Structure
+## ▶️ Como usar
 
-```
-/
-├── index.html  # Main and only file (SPA)
-└── README.md   # Project documentation
-```
-
----
-
-## 🎨 Design Principles
-
-* Clean and distraction-free
-* Plenty of whitespace
-* Soft shadows and subtle animations
-* Inter typography
-* Clear visual hierarchy
-* Mobile-first responsivity
+1. Cole suas tarefas no campo de texto
+2. Pressione **Enter**
+3. As tarefas aparecem automaticamente no painel
+4. Clique na seta para expandir/recolher subtarefas
+5. Clique no “x” para excluir toda a tarefa + subtarefas
 
 ---
 
-## 🧩 Future Improvements (Optional)
+## 🛠 Tecnologias utilizadas
 
-* Inline editing for tasks
-* LocalStorage persistence
-* Multi-board version
-* Drag-and-drop sorting
-* Task filters (priority, completed, date)
-* Themes (Light/Dark)
-
----
-
-## 📜 License
-
-This project is open-source and free to use for learning or personal projects.
-
-✅ A version with screenshots
-✅ A GIF demo for your GitHub page
-✅ A shorter or more corporate version
-Just tell me!
+* **HTML**
+* **Tailwind CSS (CDN)**
+* **JavaScript (ES6)**
